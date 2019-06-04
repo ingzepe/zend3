@@ -1,0 +1,42 @@
+<?php
+    $this->form->prepare();
+?>
+<div class="alert alert-success">
+    <strong>Excelente!</strong> No hay errores en el formulario:<br><br>
+    <ul>
+        <li>Hemos recibido su mensaje, luego nos pondremos en contacto, gracias!</li>
+    </ul>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?= $this->titulo ?></div>
+            <div class="panel-body">
+                <table class="table table-striped table-hover" style="width:900px; text-align:left">
+                    <tbody>
+                        <tr>          
+                            <td><?= $this->formLabel($this->form->get('nombre')) ?></td>
+                            <td><?php echo $this->usuario->getNombre() ?></td>
+                        </tr>
+                        <tr>          
+                            <td><?= $this->formLabel($this->form->get('apellido')) ?></td>
+                            <td><?php echo $usuario->getApellido() ?></td>
+                        </tr>
+                        <tr>          
+                            <td><?= $this->formLabel($this->form->get('email')) ?></td>
+                            <td><?php echo $usuario->getEmail() ?></td>
+                        </tr>
+                        <tr>          
+                            <td><?= $this->formLabel($this->form->get('usuario')) ?></td>
+                            <td><?php echo $usuario->getUsername() ?></td>
+                        </tr>
+                        <tr>          
+                            <td><?= $this->formLabel($this->form->get('password')) ?></td>
+                            <td><?php echo $usuario->getPassword() ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

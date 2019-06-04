@@ -1,0 +1,75 @@
+<?php
+$this->form->prepare();
+$this->form->setAttribute('action', $this->url('contacto', ['action' => 'resultado']))
+        ->setAttribute('method', 'post')
+        ->setAttribute('class', 'form-horizontal')
+        ->setAttribute('role', 'form');
+?>
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-1">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><?= $this->titulo ?></h3>
+            </div>
+            <div class="panel-body">
+                <?= $this->form()->openTag($this->form); ?>
+                <div class="form-group">
+                    <?= $this->formLabel($this->form->get('nombre')) ?>
+                    <div class="col-sm-5">
+                        <?= $this->formInput($this->form->get('nombre')) ?>
+                    </div>
+                    <div><?= $this->formElementErrors($this->form->get('nombre')) ?></div>
+                </div>
+                <div class="form-group">
+                    <?= $this->formLabel($this->form->get('genero')) ?>
+                    <div class="col-sm-5">
+                        <?= $this->formRadio($this->form->get('genero')) ?>
+                    </div>
+                    <div><?= $this->formElementErrors($this->form->get('genero')) ?></div>
+                </div>
+                <div class="form-group">
+                    <?= $this->formLabel($this->form->get('email')) ?>
+                    <div class="col-sm-5">
+                        <?= $this->formEmail($this->form->get('email')) ?>
+                    </div>
+                    <div><?= $this->formElementErrors($this->form->get('email')) ?></div>
+                </div>
+                <div class="form-group">
+                    <?= $this->formLabel($this->form->get('area')) ?>
+                    <div class="col-sm-5">
+                        <?= $this->formSelect($this->form->get('area')) ?>
+                    </div>
+                    <div><?= $this->formElementErrors($this->form->get('area')) ?></div>
+                </div>
+                <div class="form-group">
+                    <?= $this->formLabel($this->form->get('tema')) ?>
+                    <div class="col-sm-5">
+                        <?= $this->formInput($this->form->get('tema')) ?>
+                    </div>
+                    <div><?= $this->formElementErrors($this->form->get('tema')) ?></div>
+                </div>
+                <div class="form-group">
+                    <?= $this->formLabel($this->form->get('mensaje')) ?>
+                    <div class="col-sm-5">
+                        <?= $this->formTextarea($this->form->get('mensaje')) ?>
+                    </div>
+                    <div><?= $this->formElementErrors($this->form->get('mensaje')) ?></div>
+                </div>
+                <div class="form-group">
+                    <?= $this->formLabel($this->form->get('captcha')) ?>
+                    <div class="col-sm-5">
+                        <?= $this->formCaptcha($this->form->get('captcha')) ?>
+                    </div>
+                    <div><?= $this->formElementErrors($this->form->get('captcha')) ?></div>
+                </div>
+                <?= $this->formElement($this->form->get('csrf_token')) ?>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-5">
+                        <?= $this->formSubmit($form->get('send')) ?>
+                    </div>
+                </div>
+                <?= $this->form()->closeTag() ?>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+<?php $this->headTitle($this->titulo); ?>
+<div class="page-header">
+    <h1><?= $this->escapeHtml($this->titulo) ?></h1>
+</div>
+<p>
+    <a class = 'btn btn-default btn-xs' role = 'button'
+       href="<?= $this->url('catalogo', ['action' => 'crear']); ?>">crear (+)</a>
+</p>
+<table class="table table-bordered" style="width:700px;">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->productos as $producto): ?>
+            <tr style="background-color:<?= $this->cycle(["#F0F0F0", "#FFFFFF"])->next() ?>">
+                <td><?= $producto->getId() ?></td>
+                <td><?= $this->escapeHtml($producto->getDescripcion()) ?></td>
+                <td><?= $producto->getPrecio() ?></td>
+                <td><?= $producto->getCantidad() ?></td>
+                <td>
+                    <a href="<?= $this->url('catalogo', ['action' => 'editar', 'id' => $producto->getId()]) ?>"
+                       class='btn btn-primary btn-xs' role='button'>editar</a>
+                </td>
+                <td>
+                    <a href="<?= $this->url('catalogo', ['action' => 'eliminar', 'id' => $producto->getId()]) ?>"
+                       onclick="return confirm('¿Esta seguro que desea eliminar a <?= $producto->getDescripcion() ?>?');"
+                       class='btn btn-danger btn-xs' role='button'>eliminar</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <?php
+    $this->cycle()->assign(["#F0F0F0", "#FFFFFF"]);
+    $this->cycle()->prev();
+    ?>
+</table>
