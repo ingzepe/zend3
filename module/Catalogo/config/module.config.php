@@ -32,6 +32,17 @@ return [
                     ],
                 ],
             ],
+            'catalogo.paginator' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/catalogo/index/[page/:page]',
+                    'defaults' => [
+                        'page' => 1,
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'index',
+                    ]
+                ]
+            ],
         ],
     ],
     'view_manager' => [

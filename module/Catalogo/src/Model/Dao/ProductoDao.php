@@ -11,6 +11,11 @@ namespace Catalogo\Model\Dao;
 use Zend\Db\TableGateway\TableGateway;
 use Catalogo\Model\Entity\Producto;
 
+use Zend\Paginator\Adapter\DbSelect;
+use Zend\Paginator\Paginator;
+
+use RuntimeException;
+
 /**
  * Description of ProductoDao
  *
@@ -19,9 +24,11 @@ use Catalogo\Model\Entity\Producto;
 class ProductoDao implements IProductoDao {
 
     protected $tableGateway;
+    protected $tableCategoria;
 
-    public function __construct(TableGateway $tableGateway) {
+    public function __construct(TableGateway $tableGateway, TableGateway $tableCategoria) {
         $this->tableGateway = $tableGateway;
+        $this->tableCategoria = $tableCategoria;
     }
 
     public function obtenerPorId($id) {
@@ -35,8 +42,17 @@ class ProductoDao implements IProductoDao {
     }
 
     public function obtenerTodos() {
-        $resultSet = $this->tableGateway->select();
-        return $resultSet;
+//        $resultSet = $this->tableGateway->select();
+        $select = $this->tableGateway->getSql()->select();
+        $dbAdapter = $this->tableGateway->getAdapter();
+        $resultSetPrototype = $this->tableGateway->getResultSetPrototype();
+
+        $select->join(['cat' => 'categorias'], 'cat.id = productos.categoria_id', ['categoriaId' => 'id', 'categoriaNombre' => 'nombre']);
+        $select->order("id");
+        
+        $adapter = new DbSelect($select, $dbAdapter, $resultSetPrototype);
+        $paginator = new Paginator($adapter);
+        return $paginator;
     }
 
     public function eliminar(Producto $producto) {
@@ -47,6 +63,11 @@ class ProductoDao implements IProductoDao {
         $data = ['descripcion' => $producto->getDescripcion(),
             'cantidad' => $producto->getCantidad(),
             'precio' => $producto->getPrecio(),];
+
+        if ($producto->getCategoria() !== null) {
+            $data['categoria_id'] = $producto->getCategoria()->getId();
+        }
+
         $id = (int) $producto->getId();
         if ($id == 0) {
             $this->tableGateway->insert($data);
@@ -57,6 +78,19 @@ class ProductoDao implements IProductoDao {
                 throw new \RuntimeException('Id del Producto no existe');
             }
         }
+    }
+
+    public function obtenerCategorias() {
+        return $this->tableCategoria->select();
+    }
+
+    public function obtenerCategoriasSelect() {
+        $categorias = $this->obtenerCategorias();
+        $result = [];
+        foreach ($categorias as $cat) {
+            $result[$cat->getId()] = $cat->getNombre();
+        }
+        return $result;
     }
 
 }

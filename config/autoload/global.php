@@ -21,5 +21,13 @@ return [
         'driver_options' => [
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
         ],
-    ]
+    ],
+    'db_mysql_2' => [
+        'driver' => 'Pdo',
+        'dsn' => 'mysql:dbname=otra_db_mysql;host=localhost',
+    ],
+    'db_sqlite_3' => [
+        'driver' => 'Pdo_Sqlite',
+        'database' => sprintf('%s/data/sqlite.db', realpath(getcwd())),
+    ],
 ];

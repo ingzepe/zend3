@@ -11,10 +11,10 @@ namespace Catalogo;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
-
 use Catalogo\Model\Dao\IProductoDao;
 use Catalogo\Model\Dao\ProductoDao;
 use Catalogo\Model\Entity\Producto;
+use Catalogo\Model\Entity\Categoria;
 
 /**
  * Description of Module
@@ -32,13 +32,24 @@ class Module {
             'factories' => [
                 'ProductoTableGateway' => function ($sm) {
                     $dbAdapter = $sm->get(AdapterInterface::class);
+
+//                    $config = $sm->get('config');
+//                    $dbAdapter2 = new Adapter\Adapter($config['db_mysql_2']);
+
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Producto());
                     return new TableGateway('productos', $dbAdapter, null, $resultSetPrototype);
                 },
+                'CategoriaTableGateway' => function($sm) {
+                  $dbAdapter = $sm->get(AdapterInterface::class);
+                  $resultSetPrototype = new ResultSet();
+                  $resultSetPrototype->setArrayObjectPrototype(new Categoria());
+                  return new TableGateway('categorias', $dbAdapter, null, $resultSetPrototype);
+                },
                 IProductoDao::class => function($sm) {
                     $tableGateway = $sm->get('ProductoTableGateway');
-                    $dao = new ProductoDao($tableGateway);
+                    $tableCategoria = $sm->get('CategoriaTableGateway');
+                    $dao = new ProductoDao($tableGateway, $tableCategoria);
                     return $dao;
                 },
             ],

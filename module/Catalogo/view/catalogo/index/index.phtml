@@ -13,6 +13,7 @@
             <th>Nombre</th>
             <th>Precio</th>
             <th>Cantidad</th>
+            <th>Categoria</th>
             <th>Editar</th>
             <th>Eliminar</th>
         </tr>
@@ -24,6 +25,7 @@
                 <td><?= $this->escapeHtml($producto->getDescripcion()) ?></td>
                 <td><?= $producto->getPrecio() ?></td>
                 <td><?= $producto->getCantidad() ?></td>
+                <td><?= $producto->getCategoria()->getNombre() ?></td>
                 <td>
                     <a href="<?= $this->url('catalogo', ['action' => 'editar', 'id' => $producto->getId()]) ?>"
                        class='btn btn-primary btn-xs' role='button'>editar</a>
@@ -41,3 +43,7 @@
     $this->cycle()->prev();
     ?>
 </table>
+<?=
+$this->paginationControl(
+        $this->paginator, 'Sliding', 'catalogo/pagination_control_bootstrap', ['route' => 'catalogo.paginator', 'action' => 'index'])
+?>

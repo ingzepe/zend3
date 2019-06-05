@@ -25,6 +25,21 @@ class Producto extends Form {
             'name' => 'id',
             'type' => Element\Hidden::class,
         ]);
+
+        $this->add([
+            'type' => Element\Select::class,
+            'name' => 'categoria',
+            'attributes' => [
+                'class' => 'form-control',
+            ],
+            'options' => [
+                'label' => 'Categoría',
+                'empty_option' => 'Seleccione una categoria =>',
+                'label_attributes' => [
+                    'class' => 'col-sm-2 control-label',
+                ],
+            ],
+        ]);
         $this->add([
             'type' => Element\Text::class,
             'name' => 'descripcion',
