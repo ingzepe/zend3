@@ -3,11 +3,15 @@
 </div>
 
 <form class="form-inline" action="<?= $this->url('usuarios', ['action' => 'buscar']); ?>" method="post">
-  <div class="form-group">
-    <input type="text" class="form-control" name="nombre" placeholder="John" />
-  </div>
-  <button type="submit" class="btn btn-danger">Buscar</button>
+    <div class="form-group">
+        <input type="text" class="form-control" name="nombre" placeholder="John" />
+    </div>
+    <button type="submit" class="btn btn-danger">Buscar</button>
 </form>
+<p>
+    <a class = 'btn btn-default' role = 'button'
+       href="<?= $this->url('usuarios', ['action' => 'crear']); ?>">Nuevo usuario (+)</a>
+</p>
 
 <table class="table" style="width:700px;">
     <thead>
@@ -16,16 +20,27 @@
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Detalle</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($this->listaUsuario as $usuario): ?>
-            <tr style="background-color:<?php echo $this->cycle(array("#F0F0F0","#FFFFFF"))->next()?>">
+            <tr style="background-color:<?php echo $this->cycle(array("#F0F0F0", "#FFFFFF"))->next() ?>">
                 <td><?php echo $usuario->getId() ?></td>
                 <td><?php echo $usuario->getNombre() ?></td>
                 <td><?php echo $usuario->getApellido() ?></td>
                 <td>
                     <a href="<?php echo $this->url('usuarios', ['action' => 'ver', 'id' => $usuario->getId()]) ?>">ver</a>
+                </td>
+                <td>
+                    <a class="btn btn-primary btn-xs" 
+                       href="<?php echo $this->url('usuarios', ['action' => 'editar', 'id' => $usuario->getId()]) ?>">editar</a>
+                </td>
+                <td>
+                    <a class="btn btn-danger btn-xs" 
+                       onclick="return confirm('esta seguro que decea eliminar <?= $usuario->getNombre() ?>?');"
+                       href="<?php echo $this->url('usuarios', ['action' => 'eliminar', 'id' => $usuario->getId()]) ?>">eliminar</a>
                 </td>
             </tr>
         <?php endforeach; ?>

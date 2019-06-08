@@ -32,8 +32,7 @@ class ProductoDao implements IProductoDao {
     }
 
     public function obtenerPorId($id) {
-        $id = (int) $id;
-        $rowset = $this->tableGateway->select(['id' => $id]);
+        $rowset = $this->tableGateway->select(['id' => (int)$id]);
         $row = $rowset->current();
         if (!$row) {
             throw new \RuntimeException("No se pudo encontrar el Producto: $id");

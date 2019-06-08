@@ -18,15 +18,22 @@ class Usuario {
     private $id;
     private $nombre;
     private $apellido;
+    private $email;
+    private $password;
 
     public function __construct($id = null, $nombre = null, $apellido = null, $email = null, $password = null) {
         $this->id = $id;
         $this->nombre = $nombre;
         $this->apellido = $apellido;
+        $this->email = $email;
+        $this->password = $password;
     }
 
     public function getId() {
         return $this->id;
+    }
+    public function setId($id){
+        $this->id = $id;
     }
 
     public function getNombre() {
@@ -36,7 +43,7 @@ class Usuario {
     public function getApellido() {
         return $this->apellido;
     }
-    
+
     public function getEmail() {
         return $this->email;
     }
@@ -45,21 +52,16 @@ class Usuario {
         return $this->password;
     }
 
-    function getUsername() {
-        return $this->username;
-    }
-
-    function setUsername($username) {
-        $this->username = $username;
-    }
-    
     public function exchangeArray($data) {
         $this->id = (isset($data['id'])) ? $data['id'] : null;
         $this->nombre = (isset($data['nombre'])) ? $data['nombre'] : null;
         $this->apellido = (isset($data['apellido'])) ? $data['apellido'] : null;
         $this->email = (isset($data['email'])) ? $data['email'] : null;
         $this->password = (isset($data['password'])) ? $data['password'] : null;
-        $this->username = (isset($data['username'])) ? $data['username'] : null;
+    }
+
+    public function getArrayCopy() {
+        return get_object_vars($this);
     }
 
 }

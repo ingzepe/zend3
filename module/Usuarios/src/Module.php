@@ -9,7 +9,14 @@
 namespace Usuarios;
 
 use Zend\Mvc\MvcEvent;
+
+use Zend\Db\Adapter\AdapterInterface;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
+
+use Usuarios\Model\Dao\IUsuarioDao;
 use Usuarios\Model\Dao\UsuarioDao;
+use Usuarios\Model\Entity\Usuario;
 
 /**
  * Description of Module
@@ -57,14 +64,17 @@ class Module {
     public function getServiceConfig() {
         return [
             'factories' => [
-                UsuarioDao::class => function($sm) {
-                    return new UsuarioDao();
+                IUsuarioDao::class => function($sm) {
+                    $tableGateway = $sm->get('UsuarioTableGateway');
+                    $dao = new UsuarioDao($tableGateway);
+                    return $dao;
                 },
-//                'ConfigIni' => function($sm) {
-//                    $reader = new Ini();
-//                    $data = $reader->fromFile(__DIR__ . '/../config/config.ini');
-//                    return $data;
-//                },
+                'UsuarioTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get(AdapterInterface::class);
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Usuario());
+                    return new TableGateway('usuarios', $dbAdapter, null, $resultSetPrototype);
+                },
             ],
         ];
     }

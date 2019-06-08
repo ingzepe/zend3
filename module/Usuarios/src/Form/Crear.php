@@ -9,8 +9,8 @@
 namespace Usuarios\Form;
 
 use Zend\Form\Form;
-use Zend\Form\Element;
 use Zend\Form\Element\Text;
+use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Email;
 use Zend\Form\Element\Password;
 use Zend\Form\Element\Submit;
@@ -25,6 +25,9 @@ class Crear extends Form {
     public function __construct($name = null, $options = array()) {
         parent::__construct($name, $options);
 
+        $id = new Hidden('id');
+        $id->setAttribute('type', 'hidden');
+        
         $nombre = new Text('nombre');
         $nombre->setAttribute('class', 'form-control')
                 ->setLabel('Nombre')
@@ -53,6 +56,7 @@ class Crear extends Form {
         $guardar = new Submit('guardar');
         $guardar->setAttributes(['type' => 'submit', 'value' => 'Guardar', 'class' => 'btn btn-primary']);
         
+        $this->add($id);
         $this->add($nombre);
         $this->add($apellido);
         $this->add($email);

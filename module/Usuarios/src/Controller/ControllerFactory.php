@@ -10,9 +10,10 @@ namespace Usuarios\Controller;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
+
 use Usuarios\Controller\IndexController;
 use Usuarios\Controller\LoginController;
-use Usuarios\Model\Dao\UsuarioDao;
+use Usuarios\Model\Dao\IUsuarioDao;
 
 /**
  * Description of ControllerFactory
@@ -24,17 +25,18 @@ class ControllerFactory implements FactoryInterface {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null) {
         $controller = null;
         switch ($requestedName) {
-            case IndexController::class:
-                $usuarioDao = $container->get(UsuarioDao::class);
+            case IndexController::class :
+                $usuarioDao = $container->get(IUsuarioDao::class );
                 $configIni = $container->get('ConfigIni');
                 $controller = new IndexController($usuarioDao, $configIni);
                 break;
-            case LoginController::class:
-                $usuarioDao = $container->get(UsuarioDao::class);
+            case LoginController::class :
+                $usuarioDao = $container->get(IUsuarioDao::class );
                 $controller = new LoginController($usuarioDao);
                 break;
             default:
-                return (null===$options) ? $requestedName: new $requestedName($options);
+//                return (null===$options) ? $requestedName: new $requestedName($options);
+                return (null === $options) ? new $requestedName : new $requestedName($options);
         }
         return $controller;
     }

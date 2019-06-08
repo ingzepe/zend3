@@ -10,7 +10,7 @@ namespace Usuarios\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Usuarios\Model\Dao\UsuarioDao;
+use Usuarios\Model\Dao\IUsuarioDao;
 use Usuarios\Model\Entity\Usuario;
 
 use Usuarios\Form\Crear;
@@ -26,7 +26,7 @@ class IndexController extends AbstractActionController {
     private $usuariosDao;
     private $config;
 
-    public function __construct(UsuarioDao $usuarioDao, array $config) {
+    public function __construct(IUsuarioDao $usuarioDao, array $config) {
         $this->usuariosDao = $usuarioDao;
         $this->config = $config;
     }
@@ -36,9 +36,8 @@ class IndexController extends AbstractActionController {
     }
 
     public function listarAction() {
-        $titulo = $this->config['parametros']['mvc']['usuario']['titulo'];
         return new ViewModel(['listaUsuario' => $this->usuariosDao->obtenerTodos(),
-            'titulo' => $titulo]);
+            'titulo' => $this->config['parametros']['mvc']['usuario']['titulo']]);
     }
 
     public function verAction() {
@@ -67,34 +66,62 @@ class IndexController extends AbstractActionController {
         return $viewModel;
     }
     
-    public function crearAction(){
-        return ['titulo' => 'Alta', 'form' => new Crear('Alta')];
+    public function crearAction() {
+        $form = $this->getForm();
+        return new ViewModel(['titulo' => $this->config['parametros']['mvc']['usuario']['crear'], 'form' => $form]);
     }
     
-    public function guardarAction(){
-        if(!$this->request->isPost()){
-            $this->redirect()->toRoute('login', ['action' => 'index']);
+    public function editarAction() {
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('usuarios');
         }
-        
-        $form = new Crear('Alta');
-        $form->setInputFilter(new CrearValidator('Alta'));
-        
+        $form = $this->getForm();
+        $usuario = $this->usuariosDao->obtenerPorId($id);
+        $form->bind($usuario);
+        $form->get('guardar')->setAttribute('value', 'Editar');
+        $modelView = new ViewModel(['titulo' => 'Editar Usuario', 'form' => $form]);
+         $modelView->setTemplate('usuarios/index/crear');
+        return $modelView;
+    }
+    
+    public function guardarAction() {
+        if (!$this->request->isPost()) {
+            return $this->redirect()->toRoute('usuarios');
+        }
+        $form = $this->getForm();
+        $form->setInputFilter(new CrearValidator());
+
         $data = $this->request->getPost();
         $form->setData($data);
-        
-        if(!$form->isValid()){
-            $modelView = new ViewModel(['titulo' => 'Alta', 'form' => $form]);
+
+        if (!$form->isValid()) {
+            $modelView = new ViewModel(['titulo' => 'Validando Usuario', 'form' => $form]);
             $modelView->setTemplate('usuarios/index/crear');
             return $modelView;
         }
-        
-        $values = $form->getData();
 
-        $usuario = new Usuario(0);
-        $usuario->exchangeArray($values);
+        $dataForm = $form->getData();
 
-        return new ViewModel(array('titulo' => $this->config['parametros']['mvc']['usuario']['guardar'], 'form' => $form, 'usuario' => $usuario));
+        $usuario = new Usuario();
+        $usuario->exchangeArray($dataForm);
+        $this->usuariosDao->guardar($usuario);
+        return $this->redirect()->toRoute('usuarios');
+    }
 
+    public function eliminarAction() {
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('usuarios');
+        }
+        $usuario = new Usuario();
+        $usuario->setId($id);
+        $this->usuariosDao->eliminar($usuario);
+        return $this->redirect()->toRoute('usuarios');
+    }
+
+    private function getForm() {
+        return new Crear();
     }
 
 }

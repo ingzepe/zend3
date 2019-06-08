@@ -14,6 +14,7 @@ $this->form->setAttribute('action', $this->url('usuarios', ['action' => 'guardar
             </div>
             <div class="panel-body">
                 <?= $this->form()->openTag($this->form); ?>
+                <?= $this->formHidden($this->form->get('id')) ?>
                 <div class="form-group <?= (!empty($this->form->get('nombre')->getMessages())) ? 'has-error' : '' ?>">
                     <?= $this->formLabel($this->form->get('nombre')) ?>
                     <div class="col-sm-5">

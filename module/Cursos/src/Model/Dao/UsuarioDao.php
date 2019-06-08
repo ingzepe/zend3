@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Usuarios\Model\Dao;
+namespace Cursos\Model\Dao;
 
 use ArrayObject;
 use Usuarios\Model\Entity\Usuario;
